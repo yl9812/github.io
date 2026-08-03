@@ -82,7 +82,7 @@
     width: 34px;
     cursor: pointer;
     position: relative;
-    z-index: 10001; /* 메뉴 버튼을 제일 위에 배치 */
+    z-index: 10001; /* 항상 최상단 위치 */
   }
 
   .menu-icon span {
@@ -90,7 +90,6 @@
     height: 2px;
     width: 100%;
     background-color: var(--text-color);
-    transition: transform 0.3s ease, background-color 0.3s ease;
   }
 
   /* ---------- 3. 중앙 메인 타이포그래피 ---------- */
@@ -178,7 +177,7 @@
     }
   }
 
-  /* ---------- 5. 메뉴창 오버레이 (수정 핵심) ---------- */
+  /* ---------- 5. 메뉴창 오버레이 (구조 보정) ---------- */
   .menu-overlay {
     position: fixed;
     inset: 0;
@@ -192,7 +191,6 @@
     justify-content: center;
   }
 
-  /* 활성화되었을 때만 보임 */
   .menu-overlay.is-active {
     opacity: 1;
     visibility: visible;
@@ -323,6 +321,7 @@
     <div class="overlay-backdrop" id="backdrop"></div>
     <div class="menu-panel-wrap">
       <div class="menu-panel">
+        <!-- 원래 원하셨던 '메뉴창.png' 경로 유지 -->
         <img src="./메뉴창.png" alt="menu" onerror="this.src='https://via.placeholder.com/700x900?text=%EB%A9%94%EB%89%B4%EC%B0%BD.png'">
         <a class="menu-hotspot menu-hotspot--01" href="archiving.html" aria-label="01 ARCHIVING"></a>
         <a class="menu-hotspot menu-hotspot--02" href="portfolio.html" aria-label="02 PORTFOLIO"></a>
@@ -338,13 +337,13 @@
       var overlay = document.getElementById('menuOverlay');
       var backdrop = document.getElementById('backdrop');
 
-      // 메뉴 버튼 클릭 시 열기/닫기
+      // 삼선 아이콘 클릭 시 메뉴 오버레이 토글
       menuBtn.addEventListener('click', function (e) {
         e.stopPropagation();
         overlay.classList.toggle('is-active');
       });
 
-      // 검은 배경 누르면 닫기
+      // 바깥 검은 배경 클릭 시 오버레이 닫기
       backdrop.addEventListener('click', function () {
         overlay.classList.remove('is-active');
       });
