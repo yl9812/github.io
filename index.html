@@ -82,7 +82,8 @@
     width: 34px;
     cursor: pointer;
     position: relative;
-    z-index: 10001; /* 항상 최상단 위치 */
+    z-index: 10001; /* 최상단 고정 */
+    user-select: none;
   }
 
   .menu-icon span {
@@ -90,6 +91,7 @@
     height: 2px;
     width: 100%;
     background-color: var(--text-color);
+    transition: transform 0.3s ease, opacity 0.3s ease;
   }
 
   /* ---------- 3. 중앙 메인 타이포그래피 ---------- */
@@ -177,7 +179,7 @@
     }
   }
 
-  /* ---------- 5. 메뉴창 오버레이 (구조 보정) ---------- */
+  /* ---------- 5. 메뉴창 오버레이 ---------- */
   .menu-overlay {
     position: fixed;
     inset: 0;
@@ -299,20 +301,20 @@
 
   <!-- 4. 최하단 상세 인덱스 텍스트 -->
   <div class="footer-index">
-    [00] INTRODUCCIÓ / INTRODUCTION. P.05.
-    [01] HISTÒRIA / OUR STORY. P.07.
-    [02] LES NOSTRES CAFETERIES / OUR COFFEE SHOPS. P.21.
-    [03] ELS TEUS DEALERS / YOUR DEALERS. P.41.
-    [04] NOMAD AT HOME / NOMAD AT HOME. P.55.
-    [05] EQUIP / TEAM. P.61.
-    [06] IDENTITAT / IDENTITY. P.67.
-    [07] LOGÍSTICA / LOGISTICS. P.86.
-    [08] TORRANT / ROASTING. P.91.
-    [09] UNA TASSA DE CAFÈ PERFECTA / A PERFECT CUP OF COFFEE. P.99.
-    [10] GUIA DE TAST / TASTING GUIDE. P.107.
-    [11] SOSTENIBILITAT / SUSTAINABILITY P.111.
-    [12] VIATGES / TRIPS. P.115.
-    [13] COL·LABORACIONS I NOUS PROJECTES / COLLABORATIONS AND NEW PROJECTS. P.137.
+    [00] INTRODUCCIÓ / INTRODUCTION. P.05.<br>
+    [01] HISTÒRIA / OUR STORY. P.07.<br>
+    [02] LES NOSTRES CAFETERIES / OUR COFFEE SHOPS. P.21.<br>
+    [03] ELS TEUS DEALERS / YOUR DEALERS. P.41.<br>
+    [04] NOMAD AT HOME / NOMAD AT HOME. P.55.<br>
+    [05] EQUIP / TEAM. P.61.<br>
+    [06] IDENTITAT / IDENTITY. P.67.<br>
+    [07] LOGÍSTICA / LOGISTICS. P.86.<br>
+    [08] TORRANT / ROASTING. P.91.<br>
+    [09] UNA TASSA DE CAFÈ PERFECTA / A PERFECT CUP OF COFFEE. P.99.<br>
+    [10] GUIA DE TAST / TASTING GUIDE. P.107.<br>
+    [11] SOSTENIBILITAT / SUSTAINABILITY P.111.<br>
+    [12] VIATGES / TRIPS. P.115.<br>
+    [13] COL·LABORACIONS I NOUS PROJECTES / COLLABORATIONS AND NEW PROJECTS. P.137.<br>
     [14] AGRAÏMENTS / ACKNOWLEDGEMENTS. P.143.
   </div>
 
@@ -321,7 +323,6 @@
     <div class="overlay-backdrop" id="backdrop"></div>
     <div class="menu-panel-wrap">
       <div class="menu-panel">
-        <!-- 원래 원하셨던 '메뉴창.png' 경로 유지 -->
         <img src="./메뉴창.png" alt="menu" onerror="this.src='https://via.placeholder.com/700x900?text=%EB%A9%94%EB%89%B4%EC%B0%BD.png'">
         <a class="menu-hotspot menu-hotspot--01" href="archiving.html" aria-label="01 ARCHIVING"></a>
         <a class="menu-hotspot menu-hotspot--02" href="portfolio.html" aria-label="02 PORTFOLIO"></a>
@@ -332,21 +333,39 @@
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    function initMenu() {
       var menuBtn = document.getElementById('menuBtn');
       var overlay = document.getElementById('menuOverlay');
       var backdrop = document.getElementById('backdrop');
 
-      // 삼선 아이콘 클릭 시 메뉴 오버레이 토글
-      menuBtn.addEventListener('click', function (e) {
+      if (!menuBtn || !overlay) return;
+
+      // 1. 페이지 로드 시 오버레이 초기화 (닫힘 상태 강제)
+      overlay.classList.remove('is-active');
+
+      // 기존 이벤트를 깨끗이 제거 후 재등록 (중복 이벤트 방지)
+      var newMenuBtn = menuBtn.cloneNode(true);
+      menuBtn.parentNode.replaceChild(newMenuBtn, menuBtn);
+
+      // 삼선 아이콘 클릭 시 토글
+      newMenuBtn.addEventListener('click', function (e) {
+        e.preventDefault();
         e.stopPropagation();
         overlay.classList.toggle('is-active');
       });
 
-      // 바깥 검은 배경 클릭 시 오버레이 닫기
+      // 바깥 검은 배경 클릭 시 닫기
       backdrop.addEventListener('click', function () {
         overlay.classList.remove('is-active');
       });
+    }
+
+    // 문서 로드 완료 시 실행
+    document.addEventListener('DOMContentLoaded', initMenu);
+
+    // 뒤로가기/앞으로가기로 페이지 진입 시 스크립트 재초기화 (bfcache 방지)
+    window.addEventListener('pageshow', function (event) {
+      initMenu();
     });
   </script>
 
