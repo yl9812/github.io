@@ -82,7 +82,7 @@
     width: 34px;
     cursor: pointer;
     position: relative;
-    z-index: 10001; /* 최상단 고정 */
+    z-index: 10001;
     user-select: none;
   }
 
@@ -258,19 +258,19 @@
 
   <!-- 1. 상단 13장 이미지 그리드 -->
   <div class="image-grid">
-    <div class="image-item"><div class="thumb-wrap"><img src="./img01.jpg" alt="archive image 01" onerror="this.src='https://via.placeholder.com/150'"></div><div class="index-label">[01]</div></div>
-    <div class="image-item"><div class="thumb-wrap"><img src="./img02.jpg" alt="archive image 02" onerror="this.src='https://via.placeholder.com/150'"></div><div class="index-label">[02]</div></div>
-    <div class="image-item"><div class="thumb-wrap"><img src="./img03.jpg" alt="archive image 03" onerror="this.src='https://via.placeholder.com/150'"></div><div class="index-label">[03]</div></div>
-    <div class="image-item"><div class="thumb-wrap"><img src="./img04.jpg" alt="archive image 04" onerror="this.src='https://via.placeholder.com/150'"></div><div class="index-label">[04]</div></div>
-    <div class="image-item"><div class="thumb-wrap"><img src="./img05.jpg" alt="archive image 05" onerror="this.src='https://via.placeholder.com/150'"></div><div class="index-label">[05]</div></div>
-    <div class="image-item"><div class="thumb-wrap"><img src="./img06.jpg" alt="archive image 06" onerror="this.src='https://via.placeholder.com/150'"></div><div class="index-label">[06]</div></div>
-    <div class="image-item"><div class="thumb-wrap"><img src="./img07.jpg" alt="archive image 07" onerror="this.src='https://via.placeholder.com/150'"></div><div class="index-label">[07]</div></div>
-    <div class="image-item"><div class="thumb-wrap"><img src="./img08.jpg" alt="archive image 08" onerror="this.src='https://via.placeholder.com/150'"></div><div class="index-label">[08]</div></div>
-    <div class="image-item"><div class="thumb-wrap"><img src="./img09.jpg" alt="archive image 09" onerror="this.src='https://via.placeholder.com/150'"></div><div class="index-label">[09]</div></div>
-    <div class="image-item"><div class="thumb-wrap"><img src="./img10.jpg" alt="archive image 10" onerror="this.src='https://via.placeholder.com/150'"></div><div class="index-label">[10]</div></div>
-    <div class="image-item"><div class="thumb-wrap"><img src="./img11.jpg" alt="archive image 11" onerror="this.src='https://via.placeholder.com/150'"></div><div class="index-label">[11]</div></div>
-    <div class="image-item"><div class="thumb-wrap"><img src="./img12.jpg" alt="archive image 12" onerror="this.src='https://via.placeholder.com/150'"></div><div class="index-label">[12]</div></div>
-    <div class="image-item"><div class="thumb-wrap"><img src="./img13.jpg" alt="archive image 13" onerror="this.src='https://via.placeholder.com/150'"></div><div class="index-label">[13]</div></div>
+    <div class="image-item"><div class="thumb-wrap"><img src="./img01.jpg" alt="archive image 01"></div><div class="index-label">[01]</div></div>
+    <div class="image-item"><div class="thumb-wrap"><img src="./img02.jpg" alt="archive image 02"></div><div class="index-label">[02]</div></div>
+    <div class="image-item"><div class="thumb-wrap"><img src="./img03.jpg" alt="archive image 03"></div><div class="index-label">[03]</div></div>
+    <div class="image-item"><div class="thumb-wrap"><img src="./img04.jpg" alt="archive image 04"></div><div class="index-label">[04]</div></div>
+    <div class="image-item"><div class="thumb-wrap"><img src="./img05.jpg" alt="archive image 05"></div><div class="index-label">[05]</div></div>
+    <div class="image-item"><div class="thumb-wrap"><img src="./img06.jpg" alt="archive image 06"></div><div class="index-label">[06]</div></div>
+    <div class="image-item"><div class="thumb-wrap"><img src="./img07.jpg" alt="archive image 07"></div><div class="index-label">[07]</div></div>
+    <div class="image-item"><div class="thumb-wrap"><img src="./img08.jpg" alt="archive image 08"></div><div class="index-label">[08]</div></div>
+    <div class="image-item"><div class="thumb-wrap"><img src="./img09.jpg" alt="archive image 09"></div><div class="index-label">[09]</div></div>
+    <div class="image-item"><div class="thumb-wrap"><img src="./img10.jpg" alt="archive image 10"></div><div class="index-label">[10]</div></div>
+    <div class="image-item"><div class="thumb-wrap"><img src="./img11.jpg" alt="archive image 11"></div><div class="index-label">[11]</div></div>
+    <div class="image-item"><div class="thumb-wrap"><img src="./img12.jpg" alt="archive image 12"></div><div class="index-label">[12]</div></div>
+    <div class="image-item"><div class="thumb-wrap"><img src="./img13.jpg" alt="archive image 13"></div><div class="index-label">[13]</div></div>
   </div>
 
   <!-- 2. 메뉴 아이콘 -->
@@ -323,7 +323,8 @@
     <div class="overlay-backdrop" id="backdrop"></div>
     <div class="menu-panel-wrap">
       <div class="menu-panel">
-        <img src="./메뉴창.png" alt="menu" onerror="this.src='https://via.placeholder.com/700x900?text=%EB%A9%94%EB%89%B4%EC%B0%BD.png'">
+        <!-- 파일명을 영문 menu-panel.png 로 통일 -->
+        <img src="./menu-panel.png" alt="menu">
         <a class="menu-hotspot menu-hotspot--01" href="archiving.html" aria-label="01 ARCHIVING"></a>
         <a class="menu-hotspot menu-hotspot--02" href="portfolio.html" aria-label="02 PORTFOLIO"></a>
         <a class="menu-hotspot menu-hotspot--03" href="about.html" aria-label="03 ABOUT"></a>
@@ -340,33 +341,26 @@
 
       if (!menuBtn || !overlay) return;
 
-      // 1. 페이지 로드 시 오버레이 초기화 (닫힘 상태 강제)
+      // 초기 진입 시 닫힘 상태 고정
       overlay.classList.remove('is-active');
 
-      // 기존 이벤트를 깨끗이 제거 후 재등록 (중복 이벤트 방지)
+      // 기존 리스너 초기화 후 재등록
       var newMenuBtn = menuBtn.cloneNode(true);
-      menuBtn.parentNode.replaceChild(newMenuBtn, menuBtn);
+      menuBtn.parentNode.replaceChild(newMenuBtn, newMenuBtn);
 
-      // 삼선 아이콘 클릭 시 토글
       newMenuBtn.addEventListener('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
         overlay.classList.toggle('is-active');
       });
 
-      // 바깥 검은 배경 클릭 시 닫기
       backdrop.addEventListener('click', function () {
         overlay.classList.remove('is-active');
       });
     }
 
-    // 문서 로드 완료 시 실행
     document.addEventListener('DOMContentLoaded', initMenu);
-
-    // 뒤로가기/앞으로가기로 페이지 진입 시 스크립트 재초기화 (bfcache 방지)
-    window.addEventListener('pageshow', function (event) {
-      initMenu();
-    });
+    window.addEventListener('pageshow', initMenu);
   </script>
 
 </body>
