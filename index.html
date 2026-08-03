@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARCHIVE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Nanum+Gothic+Coding&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-color: #F9F9F7;
+    --text-color: #333333;
+    --text-color-light: #666666;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html, body {
+    height: 100%;
+  }
+
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'IBM Plex Mono', 'D2Coding', 'Nanum Gothic Coding', monospace;
+    font-weight: 400;
+    letter-spacing: 0.03em;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  /* ---------- 1. 상단 이미지 그리드 ---------- */
+  .image-grid {
+    display: flex;
+    width: 100%;
+    padding: 24px 24px 0 24px;
+    gap: 6px;
+  }
+
+  .image-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 0;
+  }
+
+  .image-item .thumb-wrap {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background-color: #e5e5e0;
+  }
+
+  .image-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .image-item .index-label {
+    margin-top: 8px;
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    color: var(--text-color-light);
+    text-align: center;
+  }
+
+  /* ---------- 2. 메뉴 아이콘 ---------- */
+  .menu-icon {
+    margin: 40px 0 0 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 34px;
+    cursor: pointer;
+    position: relative;
+    z-index: 1001;
+  }
+
+  .menu-icon span {
+    display: block;
+    height: 2px;
+    width: 100%;
+    background-color: var(--text-color);
+  }
+
+  /* ---------- 3. 중앙 메인 타이포그래피 ---------- */
+  .main-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 20px;
+  }
+
+  .main-text-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px; /* 타이틀 그룹, 인용구 그룹, 링크 간의 큰 간격 */
+  }
+
+  /* [추가] ARCHIVE 제목과 바로 밑 서브텍스트 사이의 좁은 줄바꿈 간격 제어 */
+  .title-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px; /* 원하시는 줄바꿈 간격에 맞춰 px 숫자를 조절해 주세요 */
+  }
+
+  .title-group .tag {
+    font-size: 15px;
+    letter-spacing: 0.15em;
+  }
+
+  .title-group .subtitle {
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    color: var(--text-color-light);
+  }
+
+  .main-text-block .quote {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .main-text-block .quote .ko {
+    font-size: 15px;
+    letter-spacing: 0.05em;
+  }
+
+  .main-text-block .quote .en {
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    color: var(--text-color-light);
+  }
+
+  .main-text-block .portfolio-link {
+    margin-top: 10px;
+  }
+
+  .main-text-block .portfolio-link a {
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    border-bottom: none;
+  }
+
+  .main-text-block .portfolio-link a:hover {
+    opacity: 0.6;
+  }
+
+  /* ---------- 4. 최하단 상세 인덱스 텍스트 ---------- */
+  .footer-index {
+    padding: 20px 24px;
+    font-size: 9px;
+    line-height: 1.6;
+    letter-spacing: 0.02em;
+    color: var(--text-color-light);
+  }
+
+  @media (max-width: 900px) {
+    .image-grid {
+      overflow-x: auto;
+    }
+    .image-item {
+      flex: 0 0 100px;
+    }
+  }
+
+  /* ---------- 5. 메뉴창 오버레이 ---------- */
+  .menu-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.45s ease, visibility 0.45s ease;
+  }
+
+  .menu-overlay.is-active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .menu-overlay .overlay-backdrop {
+    position: absolute;
+    inset: 0;
+    -webkit-backdrop-filter: blur(12px) contrast(1.1) saturate(1.2);
+    backdrop-filter: blur(12px) contrast(1.1) saturate(1.2);
+    background-color: rgba(0, 0, 0, 0.54);
+  }
+
+  .menu-panel-wrap {
+    position: relative;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 45px 0;
+    box-sizing: border-box;
+    opacity: 0;
+    transform: translateX(-12px);
+    transition: opacity 0.5s ease 0.05s, transform 0.5s ease 0.05s;
+  }
+
+  .menu-overlay.is-active .menu-panel-wrap {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .menu-panel {
+    position: relative;
+    height: 100%;
+    display: block;
+  }
+
+  .menu-panel img {
+    height: 100%;
+    width: auto;
+    display: block;
+  }
+
+  .menu-hotspot {
+    position: absolute;
+    left: 34%;
+    width: 30%;
+    height: 6.2%;
+    display: block;
+  }
+
+  .menu-hotspot--01 { top: 49.5%; }
+  .menu-hotspot--02 { top: 61%; }
+  .menu-hotspot--03 { top: 72.5%; }
+  .menu-hotspot--04 { top: 84%; }
+
+  .menu-hotspot:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+  }
+</style>
+</head>
+<body>
+
+  <!-- 1. 상단 13장 이미지 그리드 -->
+  <div class="image-grid">
+    <div class="image-item"><div class="thumb-wrap"><img src="img01.jpg" alt="archive image 01" onerror="this.src='https://via.placeholder.com/150'"></div><div class="index-label">[01]</div></div>
+    <div class="image-item"><div class="thumb-wrap"><img src="img02.jpg" alt="archive image 02" onerror="this.src='https://via.placeholder.com/150'"></div><div class="index-label">[02]</div></div>
+    <div class="image-item"><div class="thumb-wrap"><img src="img03.jpg" alt="archive image 03" onerror="this.src='https://via.placeholder.com/150'"></div><div class="index-label">[03]</div></div>
+    <div class="image-item"><div class="thumb-wrap"><img src="img04.jpg" alt="archive image 04" onerror="this.src='https://via.placeholder.com/150'"></div><div class="index-label">[04]</div></div>
+    <div class="image-item"><div class="thumb-wrap"><img src="img05.jpg" alt="archive image 05" onerror="this.src='https://via.placeholder.com/150'"></div><div class="index-label">[05]</div></div>
+    <div class="image-item"><div class="thumb-wrap"><img src="img06.jpg" alt="archive image 06" onerror="this.src='https://via.placeholder.com/150'"></div><div class="index-label">[06]</div></div>
+    <div class="image-item"><div class="thumb-wrap"><img src="img07.jpg" alt="archive image 07" onerror="this.src='https://via.placeholder.com/150'"></div><div class="index-label">[07]</div></div>
+    <div class="image-item"><div class="thumb-wrap"><img src="img08.jpg" alt="archive image 08" onerror="this.src='https://via.placeholder.com/150'"></div><div class="index-label">[08]</div></div>
+    <div class="image-item"><div class="thumb-wrap"><img src="img09.jpg" alt="archive image 09" onerror="this.src='https://via.placeholder.com/150'"></div><div class="index-label">[09]</div></div>
+    <div class="image-item"><div class="thumb-wrap"><img src="img10.jpg" alt="archive image 10" onerror="this.src='https://via.placeholder.com/150'"></div><div class="index-label">[10]</div></div>
+    <div class="image-item"><div class="thumb-wrap"><img src="img11.jpg" alt="archive image 11" onerror="this.src='https://via.placeholder.com/150'"></div><div class="index-label">[11]</div></div>
+    <div class="image-item"><div class="thumb-wrap"><img src="img12.jpg" alt="archive image 12" onerror="this.src='https://via.placeholder.com/150'"></div><div class="index-label">[12]</div></div>
+    <div class="image-item"><div class="thumb-wrap"><img src="img13.jpg" alt="archive image 13" onerror="this.src='https://via.placeholder.com/150'"></div><div class="index-label">[13]</div></div>
+  </div>
+
+  <!-- 2. 메뉴 아이콘 -->
+  <div class="menu-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <!-- 3. 중앙 메인 타이포그래피 (그룹핑 구조 개선) -->
+  <div class="main-content">
+    <div class="main-text-block">
+      <!-- 줄바꿈 간격을 좁게 묶어준 새로운 타이틀 그룹 -->
+      <div class="title-group">
+        <div class="tag">[ ARCHIVE ]</div>
+        <div class="subtitle">IDENTITY, ART, PHOTO, DESIGN</div>
+      </div>
+      
+      <div class="quote">
+        <div class="ko">영감을 받는 것들로부터</div>
+        <div class="en">FROM THE THINGS THAT INSPIRE ME</div>
+      </div>
+      
+      <div class="portfolio-link">
+        <a href="portfolio.html">▶ MY PORTFOLIO</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. 최하단 상세 인덱스 텍스트 -->
+  <div class="footer-index">
+    [00] INTRODUCCIÓ / INTRODUCTION. P.05.
+    [01] HISTÒRIA / OUR STORY. P.07.
+    [02] LES NOSTRES CAFETERIES / OUR COFFEE SHOPS. P.21.
+    [03] ELS TEUS DEALERS / YOUR DEALERS. P.41.
+    [04] NOMAD AT HOME / NOMAD AT HOME. P.55.
+    [05] EQUIP / TEAM. P.61.
+    [06] IDENTITAT / IDENTITY. P.67.
+    [07] LOGÍSTICA / LOGISTICS. P.86.
+    [08] TORRANT / ROASTING. P.91.
+    [09] UNA TASSA DE CAFÈ PERFECTA / A PERFECT CUP OF COFFEE. P.99.
+    [10] GUIA DE TAST / TASTING GUIDE. P.107.
+    [11] SOSTENIBILITAT / SUSTAINABILITY P.111.
+    [12] VIATGES / TRIPS. P.115.
+    [13] COL·LABORACIONS I NOUS PROJECTES / COLLABORATIONS AND NEW PROJECTS. P.137.
+    [14] AGRAÏMENTS / ACKNOWLEDGEMENTS. P.143.
+  </div>
+
+  <!-- 5. 메뉴창 오버레이 -->
+  <div class="menu-overlay" id="menuOverlay">
+    <div class="overlay-backdrop"></div>
+    <div class="menu-panel-wrap">
+      <div class="menu-panel">
+        <img src="메뉴창.png" alt="menu" onerror="this.src='https://via.placeholder.com/700x900?text=%EB%A9%94%EB%89%B4%EC%B0%BD.png'">
+        <a class="menu-hotspot menu-hotspot--01" href="archiving.html" aria-label="01 ARCHIVING"></a>
+        <a class="menu-hotspot menu-hotspot--02" href="portfolio.html" aria-label="02 PORTFOLIO"></a>
+        <a class="menu-hotspot menu-hotspot--03" href="about.html" aria-label="03 ABOUT"></a>
+        <a class="menu-hotspot menu-hotspot--04" href="contact.html" aria-label="04 CONTACT"></a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var menuIcon = document.querySelector('.menu-icon');
+      var overlay = document.getElementById('menuOverlay');
+
+      menuIcon.addEventListener('click', function () {
+        overlay.classList.toggle('is-active');
+      });
+    })();
+  </script>
+
+</body>
+</html>

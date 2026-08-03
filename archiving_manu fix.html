@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Archiving</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Nanum+Gothic+Coding&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-color: #F9F9F7;
+    --text-color: #333333;
+    --text-color-light: #666666;
+
+    /* ---------- 스펙 치수 (cm → px 그대로 사용) ---------- */
+    --side-margin: 264.5px;        /* 좌우 여백 7cm */
+    --grid-top-offset: 364.3px;    /* 첫 줄 top 위치 9.6364cm */
+    --thumb-w: 183.3px;            /* 썸네일 폭 4.8491cm */
+    --thumb-h: 244.4px;            /* 썸네일 높이 6.4675cm */
+    --thumb-gap: 82.5px;           /* 사진 간 간격 2.1816cm */
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html, body {
+    height: 100%;
+  }
+
+  body {
+    position: relative;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'IBM Plex Mono', 'D2Coding', 'Nanum Gothic Coding', monospace;
+    font-weight: 400;
+    letter-spacing: 0.03em;
+    min-height: 100vh;
+  }
+
+  /* ---------- 1. 상단 헤더 (타이틀 + 메뉴 아이콘, 문서 흐름에서 분리) ---------- */
+  .page-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 140px;
+    z-index: 10;
+  }
+
+  .archive-title {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'IBM Plex Mono', 'D2Coding', 'Nanum Gothic Coding', monospace;
+    font-weight: 400;
+    font-size: 44px; /* 33pt */
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+
+  /* ---------- 2. 메뉴 아이콘 (상단 좌측, 타이틀과 Y축 동일 선상) ---------- */
+  .archiving-menu-icon-fixed {
+    position: absolute !important;
+    left: 37.67px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 32.7px !important;
+    height: 13.3px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 5.3px !important;
+    cursor: pointer !important;
+    flex-shrink: 0 !important;
+    z-index: 1 !important; /* 오버레이(z-index: 1000)가 열리면 자연스럽게 이 아이콘을 덮어 가림.
+                    오버레이가 닫히면(pointer-events:none, visibility:hidden) 다시 노출/클릭 가능 */
+  }
+
+  .archiving-menu-icon-fixed span {
+    display: block !important;
+    width: 100% !important;
+    height: 1.33px !important;
+    background-color: #333333 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    flex-shrink: 0 !important;
+    transform: none !important;
+  }
+
+  /* ---------- 3. 아카이빙 썸네일 그리드 (6열 고정, 화면 정중앙 정렬) ---------- */
+  .archive-grid {
+    display: grid;
+    grid-template-columns: repeat(6, var(--thumb-w)); /* 한 줄에 무조건 6개 고정 */
+    gap: var(--thumb-gap);
+    justify-content: start; /* 6칸을 꽉 채운 grid-width 자체가 이미 정중앙에 위치하므로,
+                                grid 내부 트랙 정렬은 기본값(start)으로 두고
+                                grid 컨테이너 자체를 margin: 0 auto로 중앙 정렬함 */
+
+    /* 6열 × 썸네일 폭 + 5개 간격 = 정확한 콘텐츠 폭으로 고정한 뒤
+       margin: 0 auto로 브라우저 전체 창 기준 정중앙에 배치 */
+    width: calc(var(--thumb-w) * 6 + var(--thumb-gap) * 5);
+    margin: 0 auto;
+
+    padding-top: var(--grid-top-offset);
+    padding-bottom: 160px;
+  }
+
+  .archive-thumb {
+    width: var(--thumb-w);
+    height: var(--thumb-h);
+    overflow: hidden;
+    background-color: #e5e5e0;
+    cursor: pointer;
+  }
+
+  .archive-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* ---------- 4. 메뉴창 오버레이 (index.html과 동일한 견고한 구조) ---------- */
+  .menu-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: all 0.5s ease-in-out;
+  }
+
+  .menu-overlay.is-active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  /* 결빙/유리 질감 + 54% 블랙 어두움 효과
+     base 상태(blur 0 / 투명)에서 is-active 상태(blur 15px / 54% 블랙)로
+     backdrop-filter와 background-color 자체가 0.5초 동안 보간되며 스며들도록 분리 */
+  .menu-overlay .overlay-backdrop {
+    position: absolute;
+    inset: 0;
+    -webkit-backdrop-filter: blur(0px) contrast(1) saturate(1);
+    backdrop-filter: blur(0px) contrast(1) saturate(1);
+    background-color: rgba(0, 0, 0, 0);
+    transition: -webkit-backdrop-filter 0.5s ease-in-out, backdrop-filter 0.5s ease-in-out, background-color 0.5s ease-in-out;
+  }
+
+  .menu-overlay.is-active .overlay-backdrop {
+    -webkit-backdrop-filter: blur(15px) contrast(1.1) saturate(1.2);
+    backdrop-filter: blur(15px) contrast(1.1) saturate(1.2);
+    background-color: rgba(0, 0, 0, 0.54);
+  }
+
+  /* 미세한 노이즈 입자감 (결빙 텍스처) */
+  .menu-overlay .overlay-backdrop::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.15;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+
+  /* 메뉴창 이미지를 좌측에 배치하기 위한 래퍼 */
+  .menu-panel-wrap {
+    position: relative;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 45px 0; /* 상하 여백 유지 */
+    box-sizing: border-box;
+    pointer-events: none; /* 여백 클릭은 뒤의 .overlay-backdrop으로 통과시킴 */
+
+    opacity: 0;
+    transform: translateX(-12px);
+    transition: opacity 0.5s ease 0.05s, transform 0.5s ease 0.05s;
+  }
+
+  .menu-overlay.is-active .menu-panel-wrap {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .menu-panel {
+    position: relative;
+    height: 100%;
+    display: block;
+    pointer-events: auto; /* 실제 이미지/핫스팟 영역만 클릭 활성화 */
+  }
+
+  .menu-panel img {
+    height: 100%;
+    width: auto;
+    display: block;
+    /* 원본 비율 유지 */
+  }
+
+  .menu-hotspot {
+    position: absolute;
+    left: 34%;
+    width: 30%;
+    height: 6.2%;
+    display: block;
+  }
+
+  .menu-hotspot--01 { top: 49.5%; }
+  .menu-hotspot--02 { top: 61%; }
+  .menu-hotspot--03 { top: 72.5%; }
+  .menu-hotspot--04 { top: 84%; }
+
+  /* 새 메뉴창.png 좌측 상단의 HOME 버튼 영역에 매핑되는 투명 클릭 영역 */
+  .menu-hotspot--home {
+    top: 12%;
+    left: 28%;
+    width: 12%;
+    height: 4%;
+  }
+
+  .menu-hotspot:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+  }
+</style>
+</head>
+<body>
+
+  <!-- 1. 상단 헤더: 타이틀 + 메뉴 아이콘 (동일 Y축) -->
+  <div class="page-header">
+    <div class="archive-title">Archiving</div>
+
+    <div class="archiving-menu-icon-fixed">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+
+  <!-- 2. 아카이빙 썸네일 그리드 -->
+  <div class="archive-grid">
+    <div class="archive-thumb" onclick="openFullImage(1)">
+      <img src="썸네일1.jpg" alt="archiving thumbnail 01" onerror="this.src='https://via.placeholder.com/183x244'">
+    </div>
+    <div class="archive-thumb" onclick="openFullImage(2)">
+      <img src="썸네일2.jpg" alt="archiving thumbnail 02" onerror="this.src='https://via.placeholder.com/183x244'">
+    </div>
+    <div class="archive-thumb" onclick="openFullImage(3)">
+      <img src="썸네일3.jpg" alt="archiving thumbnail 03" onerror="this.src='https://via.placeholder.com/183x244'">
+    </div>
+    <div class="archive-thumb" onclick="openFullImage(4)">
+      <img src="썸네일4.jpg" alt="archiving thumbnail 04" onerror="this.src='https://via.placeholder.com/183x244'">
+    </div>
+    <div class="archive-thumb" onclick="openFullImage(5)">
+      <img src="썸네일5.jpg" alt="archiving thumbnail 05" onerror="this.src='https://via.placeholder.com/183x244'">
+    </div>
+    <div class="archive-thumb" onclick="openFullImage(6)">
+      <img src="썸네일6.jpg" alt="archiving thumbnail 06" onerror="this.src='https://via.placeholder.com/183x244'">
+    </div>
+    <div class="archive-thumb" onclick="openFullImage(7)">
+      <img src="썸네일7.jpg" alt="archiving thumbnail 07" onerror="this.src='https://via.placeholder.com/183x244'">
+    </div>
+    <div class="archive-thumb" onclick="openFullImage(8)">
+      <img src="썸네일8.jpg" alt="archiving thumbnail 08" onerror="this.src='https://via.placeholder.com/183x244'">
+    </div>
+    <div class="archive-thumb" onclick="openFullImage(9)">
+      <img src="썸네일9.jpg" alt="archiving thumbnail 09" onerror="this.src='https://via.placeholder.com/183x244'">
+    </div>
+    <div class="archive-thumb" onclick="openFullImage(10)">
+      <img src="썸네일10.jpg" alt="archiving thumbnail 10" onerror="this.src='https://via.placeholder.com/183x244'">
+    </div>
+    <div class="archive-thumb" onclick="openFullImage(11)">
+      <img src="썸네일11.jpg" alt="archiving thumbnail 11" onerror="this.src='https://via.placeholder.com/183x244'">
+    </div>
+    <div class="archive-thumb" onclick="openFullImage(12)">
+      <img src="썸네일12.jpg" alt="archiving thumbnail 12" onerror="this.src='https://via.placeholder.com/183x244'">
+    </div>
+    <div class="archive-thumb" onclick="openFullImage(13)">
+      <img src="썸네일13.jpg" alt="archiving thumbnail 13" onerror="this.src='https://via.placeholder.com/183x244'">
+    </div>
+    <div class="archive-thumb" onclick="openFullImage(14)">
+      <img src="썸네일14.jpg" alt="archiving thumbnail 14" onerror="this.src='https://via.placeholder.com/183x244'">
+    </div>
+    <div class="archive-thumb" onclick="openFullImage(15)">
+      <img src="썸네일15.jpg" alt="archiving thumbnail 15" onerror="this.src='https://via.placeholder.com/183x244'">
+    </div>
+    <div class="archive-thumb" onclick="openFullImage(16)">
+      <img src="썸네일16.jpg" alt="archiving thumbnail 16" onerror="this.src='https://via.placeholder.com/183x244'">
+    </div>
+    <div class="archive-thumb" onclick="openFullImage(17)">
+      <img src="썸네일17.jpg" alt="archiving thumbnail 17" onerror="this.src='https://via.placeholder.com/183x244'">
+    </div>
+    <div class="archive-thumb" onclick="openFullImage(18)">
+      <img src="썸네일18.jpg" alt="archiving thumbnail 18" onerror="this.src='https://via.placeholder.com/183x244'">
+    </div>
+    <div class="archive-thumb" onclick="openFullImage(19)">
+      <img src="썸네일19.jpg" alt="archiving thumbnail 19" onerror="this.src='https://via.placeholder.com/183x244'">
+    </div>
+    <div class="archive-thumb" onclick="openFullImage(20)">
+      <img src="썸네일20.jpg" alt="archiving thumbnail 20" onerror="this.src='https://via.placeholder.com/183x244'">
+    </div>
+  </div>
+
+  <!-- 3. 메뉴창 오버레이 -->
+  <div class="menu-overlay" id="menuOverlay">
+    <div class="overlay-backdrop"></div>
+    <div class="menu-panel-wrap">
+      <div class="menu-panel">
+        <img src="메뉴창.png" alt="menu" onerror="this.src='https://via.placeholder.com/700x900?text=%EB%A9%94%EB%89%B4%EC%B0%BD.png'">
+        <a class="menu-hotspot menu-hotspot--home" href="index.html" aria-label="HOME"></a>
+        <a class="menu-hotspot menu-hotspot--01" href="archiving.html" aria-label="01 ARCHIVING"></a>
+        <a class="menu-hotspot menu-hotspot--02" href="portfolio.html" aria-label="02 PORTFOLIO"></a>
+        <a class="menu-hotspot menu-hotspot--03" href="about.html" aria-label="03 ABOUT"></a>
+        <a class="menu-hotspot menu-hotspot--04" href="contact.html" aria-label="04 CONTACT"></a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+
+      /* -------------------------------------------------------------
+         썸네일 클릭 시 크게 보는 뷰어/모달 인터페이스 (추후 확장용 자리)
+         지금은 어떤 이미지 번호가 클릭되었는지 콘솔에만 표시하고,
+         실제 모달 UI가 완성되면 이 함수 내부만 채우면 됨.
+      ------------------------------------------------------------- */
+      function openFullImage(imgNum) {
+        // TODO: 이미지 번호(imgNum)에 해당하는 풀사이즈 뷰어/모달을 여기서 렌더링
+        console.log('openFullImage called with image number:', imgNum);
+      }
+      window.openFullImage = openFullImage;
+
+      /* -------------------------------------------------------------
+         메뉴 오버레이 초기화 로직 (BFCache/뒤로가기 버그 원천 차단)
+         - 최초 로드와 뒤로가기(pageshow, persisted) 시 모두 동일하게 실행
+         - 오버레이 is-active 강제 제거 + 클릭 이벤트 안전 재바인딩
+      ------------------------------------------------------------- */
+      function initMenu() {
+        var overlay = document.getElementById('menuOverlay');
+        var menuIcon = document.querySelector('.archiving-menu-icon-fixed');
+        if (!overlay || !menuIcon) return;
+
+        // 뒤로가기(BFCache) 복원 시 오버레이에 남아있을 수 있는 is-active를
+        // 강제로 완전히 제거하여 항상 닫힌 초기 상태를 보장함
+        overlay.classList.remove('is-active');
+
+        // 이벤트 중복 바인딩 방지 가드
+        if (!menuIcon.dataset.menuBound) {
+          menuIcon.addEventListener('click', function () {
+            overlay.classList.toggle('is-active');
+          });
+          menuIcon.dataset.menuBound = 'true';
+        }
+
+        // 클릭 대상이 메뉴 이미지(.menu-panel) 내부가 아닌 여백
+        // (.overlay-backdrop 또는 .menu-overlay 자체)일 경우에만 닫힘.
+        if (!overlay.dataset.menuBound) {
+          overlay.addEventListener('click', function (e) {
+            if (!e.target.closest('.menu-panel')) {
+              overlay.classList.remove('is-active');
+            }
+          });
+          overlay.dataset.menuBound = 'true';
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', initMenu);
+
+      window.addEventListener('pageshow', function (event) {
+        if (event.persisted) {
+          initMenu();
+        }
+      });
+    })();
+  </script>
+
+</body>
+</html>
