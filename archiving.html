@@ -222,14 +222,13 @@
     }
 
     /* =========================================================
-       6. [신규 추가] 책 펼침 형태 아카이빙 확대 모달
+       6. 책 펼침 형태 아카이빙 확대 모달
        ========================================================= */
 
-    /* ---------- 6-1. 모달 전체 레이어 (검정 배경 + 페이드) ---------- */
     .book-modal {
       position: fixed;
       inset: 0;
-      z-index: 2000; /* 메뉴 오버레이(1000)보다 항상 위 */
+      z-index: 2000;
       background-color: #000;
       opacity: 0;
       visibility: hidden;
@@ -243,8 +242,6 @@
       pointer-events: auto;
     }
 
-    /* ---------- 6-2. 실제 콘텐츠(책+화살표+하단 썸네일)를 감싸는 래퍼 ----------
-       이 래퍼 바깥의 검정 여백을 클릭하면 닫히고, 안쪽을 클릭하면 닫히지 않음 */
     .book-modal-inner {
       position: relative;
       width: 100%;
@@ -253,10 +250,9 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 40px 120px 105px 120px; /* 하단은 상향 조정된 썸네일 바(38px+약 50px) 공간을 제외하고 중앙 정렬 */
+      padding: 40px 120px 105px 120px;
     }
 
-    /* ---------- 6-3. 좌/우 페이지 넘김 화살표 ---------- */
     .book-arrow {
       position: absolute;
       top: 45%;
@@ -285,69 +281,64 @@
     .book-arrow--prev { left: 24px; }
     .book-arrow--next { right: 24px; }
 
-    /* ---------- 6-4. 책 펼침 스테이지 (책 페이지.png 배경) ---------- */
     .book-stage {
       position: relative;
-      /* 이전 대비 약 15% 확대 (62vw/960px/70vh → 71vw/1104px/80vh) */
       width: min(71vw, 1104px, calc(80vh * 1200 / 809));
-      aspect-ratio: 1200 / 809; /* 책 페이지.png 원본 비율 */
-      background-image: url("책 페이지.png");
+      aspect-ratio: 1200 / 809;
+      background-image: url("book-page.png");
       background-size: 100% 100%;
       background-repeat: no-repeat;
     }
 
-    /* ---------- 6-5. 좌/우 페이지 콘텐츠(사진 + 텍스트) ---------- */
-.book-page {
-  position: absolute;
-  top: 0;
-  height: 100%;
-  width: 50%;
-  padding: 3.3%;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  overflow: visible; /* 👈 이렇게 바꿔주시면 2cm 내려간 텍스트가 잘리지 않고 바로 보입니다! */
-}
-.book-page--left {
+    .book-page {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      width: 50%;
+      padding: 3.3%;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      overflow: visible;
+    }
+
+    .book-page--left {
       left: 0;
-      align-items: flex-start; /* 왼쪽 상단 정렬 */
-      padding-left: calc(3.3% + 67px); /* 기존 65px + 2px = 오른쪽으로 2px 이동 */
+      align-items: flex-start;
+      padding-left: calc(3.3% + 67px);
     }
 
     .book-page--right {
       right: 0;
-      align-items: flex-end; /* 오른쪽 상단 정렬 */
-      padding-right: calc(3.3% + 67px); /* 기존 65px + 2px = 왼쪽으로 2px 이동 */
+      align-items: flex-end;
+      padding-right: calc(3.3% + 67px);
     }
 
-    /* 메인 그리드(.archive-thumb)와 동일한 세로형 비율(183.3:244.4)을
-       width 기준으로 고정해서, 실제 페이지(종이) 너비의 약 63%(60~66% 범위) 크기로
-       왜곡 없이 배치. 이 비율 유지 방식 덕분에 66% 높이를 별도로 강제할 필요가 없음 */
-.book-photo {
-  width: 70.87%;
-  max-width: 100%;
-  aspect-ratio: 183.3 / 244.4;
-  overflow: hidden;
-  background-color: #e9e9e6;
-  flex-shrink: 0;
-  position: relative;
-  top: 31px; /* 👈 0.7cm(약 26px)만큼 더 아래로 이동 (5px + 26px = 31px) */
-}
+    .book-photo {
+      width: 70.87%;
+      max-width: 100%;
+      aspect-ratio: 183.3 / 244.4;
+      overflow: hidden;
+      background-color: #e9e9e6;
+      flex-shrink: 0;
+      position: relative;
+      top: 31px;
+    }
 
     .book-photo img {
       width: 100%;
       height: 100%;
-      object-fit: contain; /* 잘림 없이 원본 비율 그대로 표시 */
+      object-fit: contain;
       display: block;
     }
 
-.book-text-wrap {
-  flex: 1;
-  width: 100%;
-  display: flex;
-  align-items: flex-start; /* 세로 중앙 대신 위쪽(사진 직하단)에 정렬 */
-  padding-top: 12px;       /* 사진과 텍스트 사이 쾌적한 간격 확보 */
-}
+    .book-text-wrap {
+      flex: 1;
+      width: 100%;
+      display: flex;
+      align-items: flex-start;
+      padding-top: 12px;
+    }
 
     .book-page--left .book-text-wrap { justify-content: flex-start; }
     .book-page--right .book-text-wrap { justify-content: flex-end; }
@@ -355,23 +346,20 @@
     .book-text {
       font-family: 'D2Coding', 'Nanum Gothic Coding', monospace;
       font-weight: 400;
-      font-size: 10.6px;  /* 8pt (기존 10pt에서 2pt 축소) */
-      line-height: 25.3px; /* 19pt */
+      font-size: 10.6px;
+      line-height: 25.3px;
       color: #333333;
       white-space: pre-line;
+      transform: translateY(2cm);
     }
-.book-text {
-  /* 기존 스타일 유지 */
-  transform: translateY(2cm); /* 👈 아래 방향으로 2cm 이동 */
-}
+
     .book-page--left .book-text { text-align: left; }
     .book-page--right .book-text { text-align: right; }
 
-    /* ---------- 6-6. 하단 썸네일 내비게이션 (1줄 고정 + 드래그 스크롤, 스크롤바 숨김) ---------- */
     .book-thumb-nav {
       position: absolute;
       left: 50%;
-      bottom: 38px; /* 화면 맨 아래에서 더 넉넉히(약 0.7cm 추가) 띄운 위치 */
+      bottom: 38px;
       transform: translateX(-50%);
       width: min(71vw, 1104px);
       max-width: 100%;
@@ -381,13 +369,13 @@
       gap: 8px;
       overflow-x: auto;
       cursor: grab;
-      scrollbar-width: none;      /* Firefox */
-      -ms-overflow-style: none;   /* IE/Edge */
+      scrollbar-width: none;
+      -ms-overflow-style: none;
       user-select: none;
     }
 
     .book-thumb-nav::-webkit-scrollbar {
-      display: none; /* Chrome/Safari */
+      display: none;
     }
 
     .book-thumb-nav.is-dragging {
@@ -410,7 +398,7 @@
     .book-thumb-nav-item img {
       width: 100%;
       height: 100%;
-      object-fit: cover; /* 비율 변형 없는 정사각형 스몰 크롭 */
+      object-fit: cover;
       display: block;
     }
 
@@ -452,46 +440,40 @@
 
   <!-- 2. 아카이빙 썸네일 그리드 (최신 30번부터 ~ 1번 순으로 배치) -->
   <div class="archive-grid">
-    
-    <!-- ✨ [신규 추가] 최신 1라인 (30번 ~ 25번) -->
-    <div class="archive-thumb" onclick="openFullImage(30)"><img src="썸네일30.jpg" alt="30" onerror="this.src='https://via.placeholder.com/183x244'"></div>
-    <div class="archive-thumb" onclick="openFullImage(29)"><img src="썸네일29.jpg" alt="29" onerror="this.src='https://via.placeholder.com/183x244'"></div>
-    <div class="archive-thumb" onclick="openFullImage(28)"><img src="썸네일28.jpg" alt="28" onerror="this.src='https://via.placeholder.com/183x244'"></div>
-    <div class="archive-thumb" onclick="openFullImage(27)"><img src="썸네일27.jpg" alt="27" onerror="this.src='https://via.placeholder.com/183x244'"></div>
-    <div class="archive-thumb" onclick="openFullImage(26)"><img src="썸네일26.jpg" alt="26" onerror="this.src='https://via.placeholder.com/183x244'"></div>
-    <div class="archive-thumb" onclick="openFullImage(25)"><img src="썸네일25.jpg" alt="25" onerror="this.src='https://via.placeholder.com/183x244'"></div>
+    <div class="archive-thumb" onclick="openFullImage(30)"><img src="thumb30.jpg" alt="30"></div>
+    <div class="archive-thumb" onclick="openFullImage(29)"><img src="thumb29.jpg" alt="29"></div>
+    <div class="archive-thumb" onclick="openFullImage(28)"><img src="thumb28.jpg" alt="28"></div>
+    <div class="archive-thumb" onclick="openFullImage(27)"><img src="thumb27.jpg" alt="27"></div>
+    <div class="archive-thumb" onclick="openFullImage(26)"><img src="thumb26.jpg" alt="26"></div>
+    <div class="archive-thumb" onclick="openFullImage(25)"><img src="thumb25.jpg" alt="25"></div>
 
-    <!-- 2라인 (24번 ~ 19번) -->
-    <div class="archive-thumb" onclick="openFullImage(24)"><img src="썸네일24.jpg" alt="24" onerror="this.src='https://via.placeholder.com/183x244'"></div>
-    <div class="archive-thumb" onclick="openFullImage(23)"><img src="썸네일23.jpg" alt="23" onerror="this.src='https://via.placeholder.com/183x244'"></div>
-    <div class="archive-thumb" onclick="openFullImage(22)"><img src="썸네일22.jpg" alt="22" onerror="this.src='https://via.placeholder.com/183x244'"></div>
-    <div class="archive-thumb" onclick="openFullImage(21)"><img src="썸네일21.jpg" alt="21" onerror="this.src='https://via.placeholder.com/183x244'"></div>
-    <div class="archive-thumb" onclick="openFullImage(20)"><img src="썸네일20.jpg" alt="20" onerror="this.src='https://via.placeholder.com/183x244'"></div>
-    <div class="archive-thumb" onclick="openFullImage(19)"><img src="썸네일19.jpg" alt="19" onerror="this.src='https://via.placeholder.com/183x244'"></div>
+    <div class="archive-thumb" onclick="openFullImage(24)"><img src="thumb24.jpg" alt="24"></div>
+    <div class="archive-thumb" onclick="openFullImage(23)"><img src="thumb23.jpg" alt="23"></div>
+    <div class="archive-thumb" onclick="openFullImage(22)"><img src="thumb22.jpg" alt="22"></div>
+    <div class="archive-thumb" onclick="openFullImage(21)"><img src="thumb21.jpg" alt="21"></div>
+    <div class="archive-thumb" onclick="openFullImage(20)"><img src="thumb20.jpg" alt="20"></div>
+    <div class="archive-thumb" onclick="openFullImage(19)"><img src="thumb19.jpg" alt="19"></div>
 
-    <!-- 3라인 (18번 ~ 13번) -->
-    <div class="archive-thumb" onclick="openFullImage(18)"><img src="썸네일18.jpg" alt="18" onerror="this.src='https://via.placeholder.com/183x244'"></div>
-    <div class="archive-thumb" onclick="openFullImage(17)"><img src="썸네일17.jpg" alt="17" onerror="this.src='https://via.placeholder.com/183x244'"></div>
-    <div class="archive-thumb" onclick="openFullImage(16)"><img src="썸네일16.jpg" alt="16" onerror="this.src='https://via.placeholder.com/183x244'"></div>
-    <div class="archive-thumb" onclick="openFullImage(15)"><img src="썸네일15.jpg" alt="15" onerror="this.src='https://via.placeholder.com/183x244'"></div>
-    <div class="archive-thumb" onclick="openFullImage(14)"><img src="썸네일14.jpg" alt="14" onerror="this.src='https://via.placeholder.com/183x244'"></div>
-    <div class="archive-thumb" onclick="openFullImage(13)"><img src="썸네일13.jpg" alt="13" onerror="this.src='https://via.placeholder.com/183x244'"></div>
+    <div class="archive-thumb" onclick="openFullImage(18)"><img src="thumb18.jpg" alt="18"></div>
+    <div class="archive-thumb" onclick="openFullImage(17)"><img src="thumb17.jpg" alt="17"></div>
+    <div class="archive-thumb" onclick="openFullImage(16)"><img src="thumb16.jpg" alt="16"></div>
+    <div class="archive-thumb" onclick="openFullImage(15)"><img src="thumb15.jpg" alt="15"></div>
+    <div class="archive-thumb" onclick="openFullImage(14)"><img src="thumb14.jpg" alt="14"></div>
+    <div class="archive-thumb" onclick="openFullImage(13)"><img src="thumb13.jpg" alt="13"></div>
 
-    <!-- 4라인 (12번 ~ 7번) -->
-    <div class="archive-thumb" onclick="openFullImage(12)"><img src="썸네일12.jpg" alt="12" onerror="this.src='https://via.placeholder.com/183x244'"></div>
-    <div class="archive-thumb" onclick="openFullImage(11)"><img src="썸네일11.jpg" alt="11" onerror="this.src='https://via.placeholder.com/183x244'"></div>
-    <div class="archive-thumb" onclick="openFullImage(10)"><img src="썸네일10.jpg" alt="10" onerror="this.src='https://via.placeholder.com/183x244'"></div>
-    <div class="archive-thumb" onclick="openFullImage(9)"><img src="썸네일9.jpg" alt="09" onerror="this.src='https://via.placeholder.com/183x244'"></div>
-    <div class="archive-thumb" onclick="openFullImage(8)"><img src="썸네일8.jpg" alt="08" onerror="this.src='https://via.placeholder.com/183x244'"></div>
-    <div class="archive-thumb" onclick="openFullImage(7)"><img src="썸네일7.jpg" alt="07" onerror="this.src='https://via.placeholder.com/183x244'"></div>
+    <div class="archive-thumb" onclick="openFullImage(12)"><img src="thumb12.jpg" alt="12"></div>
+    <div class="archive-thumb" onclick="openFullImage(11)"><img src="thumb11.jpg" alt="11"></div>
+    <div class="archive-thumb" onclick="openFullImage(10)"><img src="thumb10.jpg" alt="10"></div>
+    <div class="archive-thumb" onclick="openFullImage(9)"><img src="thumb9.jpg" alt="09"></div>
+    <div class="archive-thumb" onclick="openFullImage(8)"><img src="thumb8.jpg" alt="08"></div>
+    <div class="archive-thumb" onclick="openFullImage(7)"><img src="thumb7.jpg" alt="07"></div>
 
-    <!-- 5라인: 초기 사진 (6번 ~ 1번) -->
-    <div class="archive-thumb" onclick="openFullImage(6)"><img src="썸네일6.jpg" alt="06" onerror="this.src='https://via.placeholder.com/183x244'"></div>
-    <div class="archive-thumb" onclick="openFullImage(5)"><img src="썸네일5.jpg" alt="05" onerror="this.src='https://via.placeholder.com/183x244'"></div>
-    <div class="archive-thumb" onclick="openFullImage(4)"><img src="썸네일4.jpg" alt="04" onerror="this.src='https://via.placeholder.com/183x244'"></div>
-    <div class="archive-thumb" onclick="openFullImage(3)"><img src="썸네일3.jpg" alt="03" onerror="this.src='https://via.placeholder.com/183x244'"></div>
-    <div class="archive-thumb" onclick="openFullImage(2)"><img src="썸네일2.jpg" alt="02" onerror="this.src='https://via.placeholder.com/183x244'"></div>
-    <div class="archive-thumb" onclick="openFullImage(1)"><img src="썸네일1.jpg" alt="01" onerror="this.src='https://via.placeholder.com/183x244'"></div>
+    <div class="archive-thumb" onclick="openFullImage(6)"><img src="thumb6.jpg" alt="06"></div>
+    <div class="archive-thumb" onclick="openFullImage(5)"><img src="thumb5.jpg" alt="05"></div>
+    <div class="archive-thumb" onclick="openFullImage(4)"><img src="thumb4.jpg" alt="04"></div>
+    <div class="archive-thumb" onclick="openFullImage(3)"><img src="thumb3.jpg" alt="03"></div>
+    <div class="archive-thumb" onclick="openFullImage(2)"><img src="thumb2.jpg" alt="02"></div>
+    <div class="archive-thumb" onclick="openFullImage(1)"><img src="thumb1.jpg" alt="01"></div>
   </div>
 
   <!-- 3. 메뉴창 오버레이 -->
@@ -499,7 +481,7 @@
     <div class="overlay-backdrop"></div>
     <div class="menu-panel-wrap">
       <div class="menu-panel">
-        <img src="메뉴창.png" alt="menu" onerror="this.src='https://via.placeholder.com/700x900?text=%EB%A9%94%EB%89%B4%EC%B0%BD.png'">
+        <img src="메뉴창.png" alt="menu">
         <a class="menu-hotspot menu-hotspot--home" href="index.html" aria-label="HOME"></a>
         <a class="menu-hotspot menu-hotspot--01" href="archiving.html" aria-label="01 ARCHIVING"></a>
         <a class="menu-hotspot menu-hotspot--02" href="portfolio.html" aria-label="02 PORTFOLIO"></a>
@@ -509,7 +491,7 @@
     </div>
   </div>
 
-  <!-- 4. [신규 추가] 책 펼침 형태 아카이빙 확대 모달 -->
+  <!-- 4. 책 펼침 형태 아카이빙 확대 모달 -->
   <div class="book-modal" id="bookModal">
     <div class="book-modal-inner" id="bookModalInner">
 
@@ -529,54 +511,46 @@
 
     </div>
 
-    <!-- book-modal(전체 화면) 기준으로 bottom:15px를 적용하기 위해
-         패딩이 있는 book-modal-inner 바깥, book-modal의 직속 자식으로 배치 -->
     <div class="book-thumb-nav" id="bookThumbNav"></div>
   </div>
 
   <script>
     (function () {
 
-      /* -------------------------------------------------------------
-         [신규 추가] 아카이빙 데이터 (썸네일 번호 : 정보 텍스트 매핑)
-         30번까지 확장 가능한 구조. 실제 촬영 데이터로 자유롭게 교체 가능.
-      ------------------------------------------------------------- */
       var archiveData = [
-        { id: 1,  src: "썸네일1.jpg",  text: "2025.09.13 / Seoul, Korea\n 비가 많이 오는 날, 집 가는 길" },
-        { id: 2,  src: "썸네일2.jpg",  text: "2024.11.01 / Seoul, Korea\n우연히 웨스앤더스 전시회에서," },
-        { id: 3,  src: "썸네일3.jpg",  text: "2025.01.06 / Seoul, Korea\n퇴근하고 집 가는길" },
-        { id: 4,  src: "썸네일4.jpg",  text: "2025.09.13 / Seoul, Korea\n비오는 날, 집 앞에서" },
-        { id: 5,  src: "썸네일5.jpg",  text: "2025.09.02 / Seoul, Korea\n하이츠에서 땡땡이 부츠" },
-        { id: 6,  src: "썸네일6.jpg",  text: "2025.07.05 / Seoul, Korea\n나의 작은 자취방, 노랑 선풍기" },
-        { id: 7,  src: "썸네일7.jpg",  text: "2026.06.11 / Paris, France\n프랑스 번호 개통하러 가는 길," },
-        { id: 8,  src: "썸네일8.jpg",  text: "2025.07.22 / Seoul, Korea\n신당 길거리에서," },
-        { id: 9,  src: "썸네일9.jpg",  text: "2026.02.11 / Seoul, Korea\n광복 기념 전시회에서," },
-        { id: 10, src: "썸네일10.jpg", text: "2025.05.25 / Gangwon-do, Korea\n친구들과 속초에서," },
-        { id: 11, src: "썸네일11.jpg", text: "2025.03.04 / Seoul, Korea\n눈 오는 날, 집 앞의 경성코팅" },
-        { id: 12, src: "썸네일12.jpg", text: "2025.07.02 / Seoul, Korea\n명동 그리다 만 페인팅" },
-        { id: 13, src: "썸네일13.jpg", text: "2026.06.25 / Paris, France\n프랑스 국립 도서관에서," },
-        { id: 14, src: "썸네일14.jpg", text: "2024.11.28 / Korea\n눈이 많이 오던날, 집 앞에서" },
-        { id: 15, src: "썸네일15.jpg", text: "2026.04.08 / Korea\n빨간 딸기와 분홍 양말 울할미" },
-        { id: 16, src: "썸네일16.jpg", text: "2026.07.18 / Paris, France\n파리 길거리에서 색감이 예쁜 그림," },
-        { id: 17, src: "썸네일17.jpg", text: "2026.02.11 / Seoul, Korea\n광복 기념 전시회에서," },
-        { id: 18, src: "썸네일18.jpg", text: "2026.07.20 / Paris, France\n걷다가 발견한 예쁜 나무" },
-        { id: 19, src: "썸네일19.jpg", text: "2025.01.27 / Korea\n눈이 많이 오던날, 단골 카페 가는 길" },
-        { id: 20, src: "썸네일20.jpg", text: "2025.05.25 / Gangwon-do, Korea\n친구들과 속초에서," },
-        { id: 21, src: "썸네일21.jpg", text: "2026.07.10 / Paris, France\n더위 식히러 간 도서관에서," },
-        { id: 22, src: "썸네일22.jpg", text: "2025.08.05 / Seoul, Korea\n회사 점심시간에," },
-        { id: 23, src: "썸네일23.jpg", text: "2026.07.18 / Paris, France\n센강에서 얼굴 그려주기" },
-        { id: 24, src: "썸네일24.jpg", text: "2024.09.26 / Seoul, Korea\n오빠랑 도산 나들이" },
-        { id: 25, src: "썸네일25.jpg", text: "2026.06.17 / Paris, France\n서점 Yvon Lambert 에서," },
-        { id: 26, src: "썸네일26.jpg", text: "2024.07\nHyukoh & Sunset Rollercoster" },
-        { id: 27, src: "썸네일27.jpg", text: "2026.07.07 / Paris, France\n파리 길거리에서," },
-        { id: 28, src: "썸네일28.jpg", text: "2026.04.25 / My Place\n처음 키우게 된 맨드라미," },
-        { id: 29, src: "썸네일29.jpg", text: "2026.07.15 / Paris, France\n오페라역 앞에서," },
-        { id: 30, src: "썸네일30.jpg", text: "2025.03.28 / Seoul, Korea\n을지로 골목에서," }
+        { id: 1,  src: "thumb1.jpg",  text: "2025.09.13 / Seoul, Korea\n 비가 많이 오는 날, 집 가는 길" },
+        { id: 2,  src: "thumb2.jpg",  text: "2024.11.01 / Seoul, Korea\n우연히 웨스앤더스 전시회에서," },
+        { id: 3,  src: "thumb3.jpg",  text: "2025.01.06 / Seoul, Korea\n퇴근하고 집 가는길" },
+        { id: 4,  src: "thumb4.jpg",  text: "2025.09.13 / Seoul, Korea\n비오는 날, 집 앞에서" },
+        { id: 5,  src: "thumb5.jpg",  text: "2025.09.02 / Seoul, Korea\n하이츠에서 땡땡이 부츠" },
+        { id: 6,  src: "thumb6.jpg",  text: "2025.07.05 / Seoul, Korea\n나의 작은 자취방, 노랑 선풍기" },
+        { id: 7,  src: "thumb7.jpg",  text: "2026.06.11 / Paris, France\n프랑스 번호 개통하러 가는 길," },
+        { id: 8,  src: "thumb8.jpg",  text: "2025.07.22 / Seoul, Korea\n신당 길거리에서," },
+        { id: 9,  src: "thumb9.jpg",  text: "2026.02.11 / Seoul, Korea\n광복 기념 전시회에서," },
+        { id: 10, src: "thumb10.jpg", text: "2025.05.25 / Gangwon-do, Korea\n친구들과 속초에서," },
+        { id: 11, src: "thumb11.jpg", text: "2025.03.04 / Seoul, Korea\n눈 오는 날, 집 앞의 경성코팅" },
+        { id: 12, src: "thumb12.jpg", text: "2025.07.02 / Seoul, Korea\n명동 그리다 만 페인팅" },
+        { id: 13, src: "thumb13.jpg", text: "2026.06.25 / Paris, France\n프랑스 국립 도서관에서," },
+        { id: 14, src: "thumb14.jpg", text: "2024.11.28 / Korea\n눈이 많이 오던날, 집 앞에서" },
+        { id: 15, src: "thumb15.jpg", text: "2026.04.08 / Korea\n빨간 딸기와 분홍 양말 울할미" },
+        { id: 16, src: "thumb16.jpg", text: "2026.07.18 / Paris, France\n파리 길거리에서 색감이 예쁜 그림," },
+        { id: 17, src: "thumb17.jpg", text: "2026.02.11 / Seoul, Korea\n광복 기념 전시회에서," },
+        { id: 18, src: "thumb18.jpg", text: "2026.07.20 / Paris, France\n걷다가 발견한 예쁜 나무" },
+        { id: 19, src: "thumb19.jpg", text: "2025.01.27 / Korea\n눈이 많이 오던날, 단골 카페 가는 길" },
+        { id: 20, src: "thumb20.jpg", text: "2025.05.25 / Gangwon-do, Korea\n친구들과 속초에서," },
+        { id: 21, src: "thumb21.jpg", text: "2026.07.10 / Paris, France\n더위 식히러 간 도서관에서," },
+        { id: 22, src: "thumb22.jpg", text: "2025.08.05 / Seoul, Korea\n회사 점심시간에," },
+        { id: 23, src: "thumb23.jpg", text: "2026.07.18 / Paris, France\n센강에서 얼굴 그려주기" },
+        { id: 24, src: "thumb24.jpg", text: "2024.09.26 / Seoul, Korea\n오빠랑 도산 나들이" },
+        { id: 25, src: "thumb25.jpg", text: "2026.06.17 / Paris, France\n서점 Yvon Lambert 에서," },
+        { id: 26, src: "thumb26.jpg", text: "2024.07\nHyukoh & Sunset Rollercoster" },
+        { id: 27, src: "thumb27.jpg", text: "2026.07.07 / Paris, France\n파리 길거리에서," },
+        { id: 28, src: "thumb28.jpg", text: "2026.04.25 / My Place\n처음 키우게 된 맨드라미," },
+        { id: 29, src: "thumb29.jpg", text: "2026.07.15 / Paris, France\n오페라역 앞에서," },
+        { id: 30, src: "thumb30.jpg", text: "2025.03.28 / Seoul, Korea\n을지로 골목에서," }
       ];
       window.archiveData = archiveData;
 
-      /* 메인 그리드와 동일하게 최신(30번)→과거(1번) 순으로 펼침면을 구성.
-         spreadOrder[0] = 30-29면, spreadOrder[1] = 28-27면 ... 마지막 = 2-1면 */
       var spreadOrder = archiveData.slice().sort(function (a, b) { return b.id - a.id; });
 
       var totalSpreads = Math.ceil(spreadOrder.length / 2);
@@ -588,16 +562,12 @@
       var thumbNavEl;
       var prevBtn, nextBtn;
 
-      /* -------------------------------------------------------------
-         책 펼침 모달 렌더링
-      ------------------------------------------------------------- */
       function renderSpread() {
         var leftItem = spreadOrder[currentSpread * 2];
         var rightItem = spreadOrder[currentSpread * 2 + 1];
 
         if (leftItem) {
           photoLeftEl.src = leftItem.src;
-          photoLeftEl.onerror = function () { this.src = 'https://via.placeholder.com/183x244'; };
           textLeftEl.textContent = leftItem.text;
           pageLeftEl.style.visibility = 'visible';
         } else {
@@ -606,7 +576,6 @@
 
         if (rightItem) {
           photoRightEl.src = rightItem.src;
-          photoRightEl.onerror = function () { this.src = 'https://via.placeholder.com/183x244'; };
           textRightEl.textContent = rightItem.text;
           pageRightEl.style.visibility = 'visible';
         } else {
@@ -647,7 +616,6 @@
 
       function buildThumbNav() {
         var frag = document.createDocumentFragment();
-        // 메인 그리드 및 페이지 넘김 흐름과 동일하게 30 → 1 역순으로 나열
         spreadOrder.forEach(function (item) {
           var thumb = document.createElement('div');
           thumb.className = 'book-thumb-nav-item';
@@ -656,7 +624,6 @@
           var img = document.createElement('img');
           img.src = item.src;
           img.alt = String(item.id);
-          img.onerror = function () { this.src = 'https://via.placeholder.com/100x100'; };
           thumb.appendChild(img);
 
           thumb.addEventListener('click', function () {
@@ -668,9 +635,6 @@
         thumbNavEl.appendChild(frag);
       }
 
-      /* -------------------------------------------------------------
-         책 펼침 모달 열기/닫기
-      ------------------------------------------------------------- */
       function openBookModal(spreadIndex) {
         goToSpread(spreadIndex);
         bookModal.classList.add('is-active');
@@ -680,19 +644,13 @@
         bookModal.classList.remove('is-active');
       }
 
-      /* -------------------------------------------------------------
-         썸네일 클릭 시 호출되는 진입점 (기존 archive-thumb의 onclick에서 사용 중)
-      ------------------------------------------------------------- */
       function openFullImage(imgNum) {
         var spreadIndex = spreadIndexForId(imgNum);
-        if (spreadIndex === -1) spreadIndex = 0; // fallback
+        if (spreadIndex === -1) spreadIndex = 0;
         openBookModal(spreadIndex);
       }
       window.openFullImage = openFullImage;
 
-      /* -------------------------------------------------------------
-         메뉴 오버레이 초기화 로직 (기존 로직 그대로 보존)
-      ------------------------------------------------------------- */
       function initMenu() {
         var overlay = document.getElementById('menuOverlay');
         var menuIcon = document.querySelector('.archiving-menu-icon-fixed');
@@ -717,9 +675,6 @@
         }
       }
 
-      /* -------------------------------------------------------------
-         [신규 추가] 책 펼침 모달 초기화 (요소 캐싱 + 이벤트 바인딩)
-      ------------------------------------------------------------- */
       function initBookModal() {
         bookModal = document.getElementById('bookModal');
         bookModalInner = document.getElementById('bookModalInner');
@@ -745,9 +700,6 @@
         prevBtn.addEventListener('click', function () { goToSpread(currentSpread - 1); });
         nextBtn.addEventListener('click', function () { goToSpread(currentSpread + 1); });
 
-        // 검정 배경(여백) 클릭 시 닫힘. 책 스테이지/화살표/하단 썸네일
-        // 내부 클릭 시에는 e.target이 .book-modal-inner 하위 콘텐츠 요소이므로
-        // closest('.book-stage, .book-arrow, .book-thumb-nav') 여부로 판별
         bookModal.addEventListener('click', function (e) {
           var insideContent = e.target.closest('.book-stage, .book-arrow, .book-thumb-nav');
           if (!insideContent) {
@@ -755,7 +707,6 @@
           }
         });
 
-        // 키보드 좌/우 화살표로도 페이지 넘김 가능하도록 보조 지원
         document.addEventListener('keydown', function (e) {
           if (!bookModal.classList.contains('is-active')) return;
           if (e.key === 'ArrowLeft') goToSpread(currentSpread - 1);
@@ -768,9 +719,6 @@
         initThumbNavDragScroll();
       }
 
-      /* -------------------------------------------------------------
-         [신규 추가] 하단 썸네일 바 마우스 드래그 스크롤(Drag to Scroll)
-      ------------------------------------------------------------- */
       function initThumbNavDragScroll() {
         var isDown = false;
         var startX = 0;
@@ -800,11 +748,10 @@
           e.preventDefault();
           var x = e.pageX - thumbNavEl.offsetLeft;
           var walk = x - startX;
-          if (Math.abs(walk) > 3) moved = true; // 드래그로 인식되면 클릭 이동을 막기 위한 플래그
+          if (Math.abs(walk) > 3) moved = true;
           thumbNavEl.scrollLeft = startScrollLeft - walk;
         });
 
-        // 드래그 직후 발생하는 click이 썸네일 이동을 오작동시키지 않도록 방지
         thumbNavEl.addEventListener('click', function (e) {
           if (moved) {
             e.stopPropagation();
