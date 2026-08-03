@@ -1,306 +1,249 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ARCHIVE</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Nanum+Gothic+Coding&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg-color: #F9F9F7;
-    --text-color: #333333;
-    --text-color-light: #666666;
-  }
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARCHIVE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Nanum+Gothic+Coding&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #F9F9F7;
+      --text-color: #333333;
+    }
 
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-  html, body {
-    height: 100%;
-  }
+    html, body {
+      width: 100%;
+      height: 100%;
+    }
 
-  body {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    font-family: 'IBM Plex Mono', 'D2Coding', 'Nanum Gothic Coding', monospace;
-    font-weight: 400;
-    letter-spacing: 0.03em;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  }
+    body {
+      position: relative;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: 'IBM Plex Mono', 'D2Coding', 'Nanum Gothic Coding', monospace;
+      font-weight: 400;
+      letter-spacing: 0.03em;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
 
-  /* ---------- 1. 상단 이미지 그리드 ---------- */
-  .image-grid {
-    display: flex;
-    width: 100%;
-    padding: 24px 24px 0 24px;
-    gap: 6px;
-  }
+    /* ---------- 1. 상단 아이콘 영역 ---------- */
+    .archiving-menu-icon-fixed {
+      position: fixed;
+      left: 37.67px;
+      top: 240px; /* 기존 위치 */
+      width: 24.35px;
+      height: 9.9px;
+      display: flex;
+      flex-direction: column;
+      gap: 3.9px;
+      cursor: pointer;
+      z-index: 100;
+    }
 
-  .image-item {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-width: 0;
-  }
+    .archiving-menu-icon-fixed span {
+      display: block;
+      width: 100%;
+      height: 1px;
+      background-color: #333333;
+    }
 
-  .image-item .thumb-wrap {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    overflow: hidden;
-    background-color: #e5e5e0;
-  }
-
-  .image-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
-  .image-item .index-label {
-    margin-top: 8px;
-    font-size: 10px;
-    letter-spacing: 0.05em;
-    color: var(--text-color-light);
-    text-align: center;
-  }
-
-  /* ---------- 2. 메뉴 아이콘 ---------- */
-  .menu-icon {
-    margin: 40px 0 0 32px;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    width: 34px;
-    cursor: pointer;
-    position: relative;
-    z-index: 10001;
-    user-select: none;
-  }
-
-  .menu-icon span {
-    display: block;
-    height: 2px;
-    width: 100%;
-    background-color: var(--text-color);
-    transition: transform 0.3s ease, opacity 0.3s ease;
-  }
-
-  /* ---------- 3. 중앙 메인 타이포그래피 ---------- */
-  .main-content {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 60px 20px;
-  }
-
-  .main-text-block {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 28px;
-  }
-
-  .title-group {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .title-group .tag {
-    font-size: 15px;
-    letter-spacing: 0.15em;
-  }
-
-  .title-group .subtitle {
-    font-size: 14px;
-    letter-spacing: 0.1em;
-    color: var(--text-color-light);
-  }
-
-  .main-text-block .quote {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .main-text-block .quote .ko {
-    font-size: 15px;
-    letter-spacing: 0.05em;
-  }
-
-  .main-text-block .quote .en {
-    font-size: 14px;
-    letter-spacing: 0.1em;
-    color: var(--text-color-light);
-  }
-
-  .main-text-block .portfolio-link {
-    margin-top: 10px;
-  }
-
-  .main-text-block .portfolio-link a {
-    color: var(--text-color);
-    text-decoration: none;
-    font-size: 14px;
-    letter-spacing: 0.1em;
-  }
-
-  .main-text-block .portfolio-link a:hover {
-    opacity: 0.6;
-  }
-
-  /* ---------- 4. 최하단 상세 인덱스 텍스트 ---------- */
-  .footer-index {
-    padding: 20px 24px;
-    font-size: 9px;
-    line-height: 1.6;
-    letter-spacing: 0.02em;
-    color: var(--text-color-light);
-  }
-
-  @media (max-width: 900px) {
-    .image-grid {
+    /* 상단 슬라이드/갤러리 영역이 있는 경우 */
+    .top-gallery {
+      width: 100%;
+      padding: 20px 38px 0 38px;
+      display: flex;
+      gap: 12px;
       overflow-x: auto;
+      white-space: nowrap;
     }
-    .image-item {
-      flex: 0 0 100px;
+
+    /* ---------- 2. 메인 중앙 콘텐츠 ---------- */
+    .main-container {
+      min-height: 60vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 40px 20px;
     }
-  }
 
-  /* ---------- 5. 메뉴창 오버레이 ---------- */
-  .menu-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 9999;
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transition: opacity 0.35s ease, visibility 0.35s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+    .main-title {
+      font-size: 16px;
+      letter-spacing: 0.15em;
+      margin-bottom: 12px;
+    }
 
-  .menu-overlay.is-active {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-  }
+    .main-subtitle {
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      color: #666;
+      margin-bottom: 36px;
+    }
 
-  .menu-overlay .overlay-backdrop {
-    position: absolute;
-    inset: 0;
-    -webkit-backdrop-filter: blur(12px) contrast(1.1) saturate(1.2);
-    backdrop-filter: blur(12px) contrast(1.1) saturate(1.2);
-    background-color: rgba(0, 0, 0, 0.54);
-  }
+    .main-desc-kr {
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 6px;
+    }
 
-  .menu-panel-wrap {
-    position: relative;
-    z-index: 2;
-    max-height: 85vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: opacity 0.35s ease 0.1s, transform 0.35s ease 0.1s;
-  }
+    .main-desc-en {
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      color: #555;
+      margin-bottom: 40px;
+    }
 
-  .menu-overlay.is-active .menu-panel-wrap {
-    opacity: 1;
-    transform: translateY(0);
-  }
+    .portfolio-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+    }
 
-  .menu-panel {
-    position: relative;
-    max-height: 85vh;
-    display: inline-block;
-  }
+    .portfolio-link:hover {
+      opacity: 0.7;
+    }
 
-  .menu-panel img {
-    max-height: 85vh;
-    width: auto;
-    display: block;
-  }
+    /* ---------- 3. 하단 목차/텍스트 영역 ---------- */
+    .bottom-index-wrap {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 38px 80px 38px;
+      font-size: 10.5px;
+      line-height: 1.8;
+      color: #444;
+      text-align: left;
+    }
 
-  .menu-hotspot {
-    position: absolute;
-    left: 34%;
-    width: 30%;
-    height: 6.2%;
-    display: block;
-  }
+    /* ---------- 4. 메뉴 오버레이 ---------- */
+    .menu-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: all 0.4s ease-in-out;
+    }
 
-  .menu-hotspot--01 { top: 49.5%; }
-  .menu-hotspot--02 { top: 61%; }
-  .menu-hotspot--03 { top: 72.5%; }
-  .menu-hotspot--04 { top: 84%; }
+    .menu-overlay.is-active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
 
-  .menu-hotspot:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-  }
-</style>
+    .menu-overlay .overlay-backdrop {
+      position: absolute;
+      inset: 0;
+      -webkit-backdrop-filter: blur(15px) contrast(1.1) saturate(1.2);
+      backdrop-filter: blur(15px) contrast(1.1) saturate(1.2);
+      background-color: rgba(0, 0, 0, 0.54);
+    }
+
+    .menu-overlay .overlay-backdrop::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0.15;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    .menu-panel-wrap {
+      position: relative;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 45px 0;
+      box-sizing: border-box;
+      opacity: 0;
+      transform: translateX(-12px);
+      transition: opacity 0.4s ease 0.05s, transform 0.4s ease 0.05s;
+    }
+
+    .menu-overlay.is-active .menu-panel-wrap {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .menu-panel {
+      position: relative;
+      height: 100%;
+      display: block;
+    }
+
+    .menu-panel img {
+      height: 100%;
+      width: auto;
+      display: block;
+    }
+
+    /* Hotspots */
+    .menu-hotspot {
+      position: absolute;
+      left: 34%;
+      width: 30%;
+      height: 6.2%;
+      display: block;
+    }
+
+    .menu-hotspot--01 { top: 49.5%; }
+    .menu-hotspot--02 { top: 61%; }
+    .menu-hotspot--03 { top: 72.5%; }
+    .menu-hotspot--04 { top: 84%; }
+
+    .menu-hotspot--home {
+      top: 12%;
+      left: 28%;
+      width: 12%;
+      height: 4%;
+    }
+  </style>
 </head>
 <body>
 
-  <!-- 1. 상단 13장 이미지 그리드 -->
-  <div class="image-grid">
-    <div class="image-item"><div class="thumb-wrap"><img src="./img01.jpg" alt="archive image 01"></div><div class="index-label">[01]</div></div>
-    <div class="image-item"><div class="thumb-wrap"><img src="./img02.jpg" alt="archive image 02"></div><div class="index-label">[02]</div></div>
-    <div class="image-item"><div class="thumb-wrap"><img src="./img03.jpg" alt="archive image 03"></div><div class="index-label">[03]</div></div>
-    <div class="image-item"><div class="thumb-wrap"><img src="./img04.jpg" alt="archive image 04"></div><div class="index-label">[04]</div></div>
-    <div class="image-item"><div class="thumb-wrap"><img src="./img05.jpg" alt="archive image 05"></div><div class="index-label">[05]</div></div>
-    <div class="image-item"><div class="thumb-wrap"><img src="./img06.jpg" alt="archive image 06"></div><div class="index-label">[06]</div></div>
-    <div class="image-item"><div class="thumb-wrap"><img src="./img07.jpg" alt="archive image 07"></div><div class="index-label">[07]</div></div>
-    <div class="image-item"><div class="thumb-wrap"><img src="./img08.jpg" alt="archive image 08"></div><div class="index-label">[08]</div></div>
-    <div class="image-item"><div class="thumb-wrap"><img src="./img09.jpg" alt="archive image 09"></div><div class="index-label">[09]</div></div>
-    <div class="image-item"><div class="thumb-wrap"><img src="./img10.jpg" alt="archive image 10"></div><div class="index-label">[10]</div></div>
-    <div class="image-item"><div class="thumb-wrap"><img src="./img11.jpg" alt="archive image 11"></div><div class="index-label">[11]</div></div>
-    <div class="image-item"><div class="thumb-wrap"><img src="./img12.jpg" alt="archive image 12"></div><div class="index-label">[12]</div></div>
-    <div class="image-item"><div class="thumb-wrap"><img src="./img13.jpg" alt="archive image 13"></div><div class="index-label">[13]</div></div>
-  </div>
-
-  <!-- 2. 메뉴 아이콘 -->
-  <div class="menu-icon" id="menuBtn">
+  <!-- 메뉴 아이콘 -->
+  <div class="archiving-menu-icon-fixed" id="menuToggleBtn">
     <span></span>
     <span></span>
     <span></span>
   </div>
 
-  <!-- 3. 중앙 메인 타이포그래피 -->
-  <div class="main-content">
-    <div class="main-text-block">
-      <div class="title-group">
-        <div class="tag">[ ARCHIVE ]</div>
-        <div class="subtitle">IDENTITY, ART, PHOTO, DESIGN</div>
-      </div>
-      
-      <div class="quote">
-        <div class="ko">영감을 받는 것들로부터</div>
-        <div class="en">FROM THE THINGS THAT INSPIRE ME</div>
-      </div>
-      
-      <div class="portfolio-link">
-        <a href="portfolio.html">▶ MY PORTFOLIO</a>
-      </div>
-    </div>
-  </div>
+  <!-- 메인 중앙 문구 -->
+  <main class="main-container">
+    <div class="main-title">[ ARCHIVE ]</div>
+    <div class="main-subtitle">IDENTITY, ART, PHOTO, DESIGN</div>
 
-  <!-- 4. 최하단 상세 인덱스 텍스트 -->
-  <div class="footer-index">
+    <div class="main-desc-kr">영감을 받는 것들로부터</div>
+    <div class="main-desc-en">FROM THE THINGS THAT INSPIRE ME</div>
+
+    <a href="portfolio.html" class="portfolio-link">
+      <span>▶ MY PORTFOLIO</span>
+    </a>
+  </main>
+
+  <!-- 하단 텍스트 인덱스 -->
+  <section class="bottom-index-wrap">
     [00] INTRODUCCIÓ / INTRODUCTION. P.05.<br>
     [01] HISTÒRIA / OUR STORY. P.07.<br>
     [02] LES NOSTRES CAFETERIES / OUR COFFEE SHOPS. P.21.<br>
@@ -316,15 +259,15 @@
     [12] VIATGES / TRIPS. P.115.<br>
     [13] COL·LABORACIONS I NOUS PROJECTES / COLLABORATIONS AND NEW PROJECTS. P.137.<br>
     [14] AGRAÏMENTS / ACKNOWLEDGEMENTS. P.143.
-  </div>
+  </section>
 
-  <!-- 5. 메뉴창 오버레이 -->
+  <!-- 메뉴 오버레이 (menu-panel.png 사용) -->
   <div class="menu-overlay" id="menuOverlay">
-    <div class="overlay-backdrop" id="backdrop"></div>
+    <div class="overlay-backdrop"></div>
     <div class="menu-panel-wrap">
       <div class="menu-panel">
-        <!-- 파일명을 영문 menu-panel.png 로 통일 -->
-        <img src="./menu-panel.png" alt="menu">
+        <img src="menu-panel.png" alt="menu">
+        <a class="menu-hotspot menu-hotspot--home" href="index.html" aria-label="HOME"></a>
         <a class="menu-hotspot menu-hotspot--01" href="archiving.html" aria-label="01 ARCHIVING"></a>
         <a class="menu-hotspot menu-hotspot--02" href="portfolio.html" aria-label="02 PORTFOLIO"></a>
         <a class="menu-hotspot menu-hotspot--03" href="about.html" aria-label="03 ABOUT"></a>
@@ -334,34 +277,22 @@
   </div>
 
   <script>
-    function initMenu() {
-      var menuBtn = document.getElementById('menuBtn');
-      var overlay = document.getElementById('menuOverlay');
-      var backdrop = document.getElementById('backdrop');
+    document.addEventListener('DOMContentLoaded', function () {
+      var menuBtn = document.getElementById('menuToggleBtn');
+      var menuOverlay = document.getElementById('menuOverlay');
 
-      if (!menuBtn || !overlay) return;
+      if (menuBtn && menuOverlay) {
+        menuBtn.addEventListener('click', function () {
+          menuOverlay.classList.toggle('is-active');
+        });
 
-      // 초기 진입 시 닫힘 상태 고정
-      overlay.classList.remove('is-active');
-
-      // 기존 리스너 초기화 후 재등록
-      var newMenuBtn = menuBtn.cloneNode(true);
-      menuBtn.parentNode.replaceChild(newMenuBtn, newMenuBtn);
-
-      newMenuBtn.addEventListener('click', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        overlay.classList.toggle('is-active');
-      });
-
-      backdrop.addEventListener('click', function () {
-        overlay.classList.remove('is-active');
-      });
-    }
-
-    document.addEventListener('DOMContentLoaded', initMenu);
-    window.addEventListener('pageshow', initMenu);
+        menuOverlay.addEventListener('click', function (e) {
+          if (!e.target.closest('.menu-panel')) {
+            menuOverlay.classList.remove('is-active');
+          }
+        });
+      }
+    });
   </script>
-
 </body>
 </html>
